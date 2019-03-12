@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+RUN:
+    python sendMail.py "mail@.com" "ok" "tomo"
+"""
 import smtplib
 import sys
 from email.mime.text import MIMEText
@@ -32,6 +36,8 @@ class Mailer:
         smtpobj.close()
 
 def main(args):
+    if len(args) != 4:
+        quit()
     # set args
     to = args[1]
     title = args[2]

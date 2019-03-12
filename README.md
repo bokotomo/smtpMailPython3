@@ -1,6 +1,5 @@
 # smtpMailPython3
 
-
 # setting
 
 ```
