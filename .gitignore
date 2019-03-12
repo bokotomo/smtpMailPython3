@@ -1,0 +1,17 @@
+# common 
+__pycache__/
+.cache
+.DS_Store
+.ipynb_checkpoints
+.python-version 
+*.swp
+*.pyc
+
+# default
+env.py
+
+# venv
+mail/
+
+# gitkeep
+!.gitkeep
