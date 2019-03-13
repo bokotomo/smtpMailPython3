@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 RUN:
-    python sendMail.py "mail@.com" "ok" "tomo"
+    python sendMail.py "mail@.com" "title" "こんにちは"
 """
 import smtplib
 import sys
@@ -10,34 +10,36 @@ from email.utils import formatdate
 from env import mail_config as config
 
 class Mailer:
-    def __init__(self, host, port, mail, password, to, title, body):
+    def __init__(self, host, port, mail, password):
         self.host = host
         self.port = port
         self.password = password
         self.mail = mail
-        self.to = to
-        self.msg = self.create_message(title, body)
 
-    def create_message(self, subject, body):
+    def __create_message(self, to, subject, body):
         msg = MIMEText(body)
         msg['Subject'] = subject
         msg['From'] = self.mail
-        msg['To'] = self.to
+        msg['To'] = to
         msg['Date'] = formatdate()
         return msg
 
-    def send(self):
+    def send(self, to, title, body):
+        msg = self.__create_message(to, title, body)
+
         smtpobj = smtplib.SMTP(self.host, self.port)
         smtpobj.ehlo()
         smtpobj.starttls()
         smtpobj.ehlo()
         smtpobj.login(self.mail, self.password)
-        smtpobj.sendmail(self.mail, self.to, self.msg.as_string())
+        smtpobj.sendmail(self.mail, to, msg.as_string())
         smtpobj.close()
 
 def main(args):
     if len(args) != 4:
+        print('args error')
         quit()
+
     # set args
     to = args[1]
     title = args[2]
@@ -50,16 +52,8 @@ def main(args):
     host = config.host
 
     # send mail
-    mailer = Mailer(
-        host,
-        port,
-        mail,
-        password,
-        to,
-        title,
-        body
-    )
-    mailer.send()
+    mailer = Mailer(host, port, mail, password)
+    mailer.send(to, title, body)
 
 if __name__ == "__main__":
     main(sys.argv)
